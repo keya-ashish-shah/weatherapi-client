@@ -1,26 +1,17 @@
-import React, {
-  createContext,
-  useContext,
-  useReducer,
-  useEffect,
-  useCallback,
-} from "react";
-
-
+import React, { createContext, useContext, useReducer, useEffect, useCallback } from "react";
 
 const AuthContext = createContext();
 
 const initialState = {
   user: null,
-  token: null,
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case "LOGIN":
-      return { ...state, user: action.payload.user, token: action.payload.token };
+      return { ...state, user: action.payload };
     case "LOGOUT":
-      return { ...state, user: null, token: null };
+      return { ...state, user: null };
     default:
       return state;
   }
@@ -30,29 +21,29 @@ export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    const raw = localStorage.getItem("wv_auth");
+    const raw = localStorage.getItem("wv_user");
     if (raw) {
       try {
-        const parsed = JSON.parse(raw);
-        if (parsed?.user?.email) {
-          dispatch({ type: "LOGIN", payload: parsed });
+        const user = JSON.parse(raw);
+        if (user?.email) {
+          dispatch({ type: "LOGIN", payload: user });
         }
       } catch {
+        localStorage.removeItem("wv_user");
       }
     }
   }, []);
 
   useEffect(() => {
     if (state.user) {
-      localStorage.setItem("wv_auth", JSON.stringify({ user: state.user, token: state.token }));
+      localStorage.setItem("wv_user", JSON.stringify(state.user));
     } else {
-      localStorage.removeItem("wv_auth");
+      localStorage.removeItem("wv_user");
     }
-  }, [state.user, state.token]);
+  }, [state.user]);
 
   const login = useCallback((user) => {
-    const token = "local:" + btoa(user.email + ":" + Date.now());
-    dispatch({ type: "LOGIN", payload: { user, token } });
+    dispatch({ type: "LOGIN", payload: user });
   }, []);
 
   const logout = useCallback(() => {
@@ -60,7 +51,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: state.user, token: state.token, login, logout }}>
+    <AuthContext.Provider value={{ user: state.user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -69,5 +60,3 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
- 
-   

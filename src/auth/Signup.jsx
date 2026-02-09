@@ -1,43 +1,29 @@
-import React, { useReducer, useRef, useId, useLayoutEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useLocalUsers from "./useLocalUsers";
 import { validateName, validateEmail, validateDOB, validatePassword } from "./validation";
-
-const initialForm = {
-  name: "",
-  email: "",
-  dob: "",
-  password: ""
-};
-
-function formReducer(state, action) {
-  switch (action.type) {
-    case "CHANGE":
-      return { ...state, [action.field]: action.value };
-    case "RESET":
-      return initialForm;
-    default:
-      return state;
-  }
-}
+import { registerUser } from "./api";
 
 export default function Signup() {
-  const [form, dispatch] = useReducer(formReducer, initialForm);
-  const { addUser, findByEmail } = useLocalUsers();
+  const [form, setForm] = useState({ name: "", email: "", dob: "", password: "" });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const emailRef = useRef(null);
-  const id = useId();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     emailRef.current?.focus();
   }, []);
 
   const onChange = (e) => {
-    dispatch({ type: "CHANGE", field: e.target.name, value: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
+
     const errors = {
       name: validateName(form.name),
       email: validateEmail(form.email),
@@ -47,51 +33,125 @@ export default function Signup() {
 
     const hasError = Object.values(errors).some(Boolean);
     if (hasError) {
-      alert(Object.values(errors).filter(Boolean).join("\n"));
+      setError(Object.values(errors).filter(Boolean).join("\n"));
       return;
     }
 
-    if (findByEmail(form.email)) {
-      alert("An account with this email already exists. Login instead.");
-      return;
-    }
+    setLoading(true);
 
-    const passwordHash = btoa(form.password);
-    addUser({ name: form.name.trim(), email: form.email.toLowerCase().trim(), dob: form.dob, passwordHash });
-    alert("Account created. Please login.");
-    dispatch({ type: "RESET" });
-    navigate("/login");
+    try {
+      await registerUser({
+        name: form.name.trim(),
+        email: form.email.toLowerCase().trim(),
+        dob: form.dob,
+        password: form.password
+      });
+
+      setSuccess("Account created! Redirecting to login...");
+      setForm({ name: "", email: "", dob: "", password: "" });
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="auth-card" style={{ maxWidth: 520, margin: "30px auto", padding: 20, background: "white", borderRadius: 12, boxShadow: "0 8px 30px rgba(0,0,0,0.08)" }}>
+    <div style={{ maxWidth: 520, margin: "30px auto", padding: 20, background: "white", borderRadius: 12, boxShadow: "0 8px 30px rgba(0,0,0,0.08)" }}>
       <h2 style={{ textAlign: "center", marginBottom: 6 }}>Create an account</h2>
       <p style={{ textAlign: "center", color: "#6b7280", marginTop: 0 }}>Signup for WeatherVision</p>
+
+      {error && (
+        <div style={{ padding: 12, background: "#fee", color: "#c00", borderRadius: 8, marginBottom: 12, fontSize: 14, whiteSpace: "pre-line" }}>
+          {error}
+        </div>
+      )}
+
+      {success && (
+        <div style={{ padding: 12, background: "#efe", color: "#0a0", borderRadius: 8, marginBottom: 12, fontSize: 14 }}>
+          {success}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12, marginTop: 12 }}>
         <label>
           <div style={{ fontSize: 13, marginBottom: 6 }}>Full name</div>
-          <input name="name" value={form.name} onChange={onChange} placeholder="Jane Doe" required />
+          <input
+            name="name"
+            value={form.name}
+            onChange={onChange}
+            placeholder="Jane Doe"
+            required
+            style={{ width: "100%", padding: "10px", borderRadius: 6, border: "1px solid #ddd" }}
+          />
         </label>
 
         <label>
           <div style={{ fontSize: 13, marginBottom: 6 }}>Email</div>
-          <input ref={emailRef} id={id + "-email"} type="email" name="email" value={form.email} onChange={onChange} placeholder="you@example.com" required />
+          <input
+            ref={emailRef}
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={onChange}
+            placeholder="you@example.com"
+            required
+            style={{ width: "100%", padding: "10px", borderRadius: 6, border: "1px solid #ddd" }}
+          />
         </label>
 
         <label>
           <div style={{ fontSize: 13, marginBottom: 6 }}>Date of Birth</div>
-          <input type="date" name="dob" value={form.dob} onChange={onChange} required />
+          <input
+            type="date"
+            name="dob"
+            value={form.dob}
+            onChange={onChange}
+            required
+            style={{ width: "100%", padding: "10px", borderRadius: 6, border: "1px solid #ddd" }}
+          />
         </label>
 
         <label>
           <div style={{ fontSize: 13, marginBottom: 6 }}>Password</div>
-          <input type="password" name="password" value={form.password} onChange={onChange} placeholder="At least 8 characters" required />
+          <input
+            type="password"
+            name="password"
+            value={form.password}
+            onChange={onChange}
+            placeholder="At least 8 characters"
+            required
+            style={{ width: "100%", padding: "10px", borderRadius: 6, border: "1px solid #ddd" }}
+          />
         </label>
 
         <div style={{ display: "flex", gap: 8 }}>
-          <button type="submit" style={{ flex: 1, padding: "10px 14px", borderRadius: 8, background: "#111827", color: "white", border: "none" }}>Sign up</button>
-          <button type="button" onClick={() => navigate("/login")} style={{ flex: 1, padding: "10px 14px", borderRadius: 8, background: "#6b7280", color: "white", border: "none" }}>Login</button>
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              flex: 1,
+              padding: "10px 14px",
+              borderRadius: 8,
+              background: loading ? "#6b7280" : "#111827",
+              color: "white",
+              border: "none",
+              cursor: loading ? "not-allowed" : "pointer"
+            }}
+          >
+            {loading ? "Creating account..." : "Sign up"}
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate("/login")}
+            style={{ flex: 1, padding: "10px 14px", borderRadius: 8, background: "#6b7280", color: "white", border: "none", cursor: "pointer" }}
+          >
+            Login
+          </button>
         </div>
       </form>
     </div>
