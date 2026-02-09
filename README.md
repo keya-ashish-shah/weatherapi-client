@@ -28,4 +28,41 @@ It connects to the backend (`weatherapi-server`) via RESTful APIs to fetch and d
  **Reusable Components**
 - Modular components (`Sidebar`, `WeatherPage`, etc.) for easy maintenance and scalability.
 
+## ⚙️ Tech Stack
 
+| Layer | Technology |
+|-------|-------------|
+| Frontend | React (Create React App) |
+| State Management | React Context API |
+| Styling | CSS / Modular CSS |
+| API Handling | Axios / Fetch |
+| Routing | React Router |
+| Authentication | Custom Auth Context integrated with backend |
+| Data Source | Weather API (via backend service) |
+
+---
+
+## Getting Started
+
+###  Clone the repository
+```bash
+git clone https://github.com/keya-ashish-shah/weatherapi-client.git
+cd weatherapi-client
+
+
+
+## Install dependencies
+
+
+
+  "axios": "^1.6.0",                 // For making API calls to your backend
+  "react": "^18.2.0",                // Core React library
+  "react-dom": "^18.2.0",            // DOM rendering for React
+  "react-router-dom": "^6.22.0",     // Routing between pages (Login, Weather, Home)
+  "react-scripts": "5.0.1",           // Scripts used by Create React App (build/start/test)
+  "recharts": "^3.7.0"
+
+## Scripts
+- \`npm install\` → Install dependencies  
+- \`npm run dev\` → Run in development mode  
+- \`npm start\` → Run in production

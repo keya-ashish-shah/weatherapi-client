@@ -15,7 +15,7 @@ export default function Login() {
   const emailRef = useRef();
 
   useEffect(() => {
-    emailRef.current?.focus();
+    emailRef.current?.focus(); 
   }, []);
 
   const handleSubmit = (e) => {
