@@ -1,0 +1,132 @@
+.layout-root {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #a8edea, #fed6e3);
+}
+
+.sidebar {
+  width: 260px;
+  background: #1f2937;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 20px;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar-header h2 {
+  font-size: 1.3rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  gap: 10px;
+}
+
+.nav-link {
+  color: #cbd5e1;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.nav-link.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+.sidebar-footer {
+  margin-top: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 20px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  background: #2563eb;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.name {
+  font-weight: 600;
+}
+.email {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.btn-logout {
+  margin-top: 14px;
+  width: 100%;
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 10px 0;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-logout:hover {
+  background: #b91c1c;
+}
+
+.not-logged {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.app-footer {
+  background: #1f2937;
+  color: #ccc;
+  text-align: center;
+  padding: 18px;
+  font-size: 0.9rem;
+  margin-top: auto;
+}

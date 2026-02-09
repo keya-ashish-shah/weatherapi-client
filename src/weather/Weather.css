@@ -1,0 +1,85 @@
+.aw-container {
+  background: #f3f4f6;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.aw-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.aw-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.aw-controls select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.aw-today {
+  background: white;
+  margin-top: 18px;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.aw-today .label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.aw-today .desc {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.aw-today .hilow {
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.aw-today .temp {
+  font-size: 48px;
+  font-weight: 600;
+}
+
+.aw-hourly {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  margin-top: 18px;
+  padding-bottom: 6px;
+}
+
+.hour-card {
+  min-width: 70px;
+  background: white;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.hour {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.hour-temp {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.loading {
+  margin-top: 10px;
+  color: #555;
+}
